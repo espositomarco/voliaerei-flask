@@ -20,7 +20,7 @@ def test_get_nazioni():
     response = requests.get(url="http://localhost:5000/nazioni", headers=headers)
     _show_response(response, n=1)
 
-def test_get_citta():
+def test_get_all_citta():
     # TEST 2 - GET /citta
     response = requests.get(url="http://localhost:5000/citta", headers=headers)
     _show_response(response, n=2)
@@ -41,14 +41,23 @@ def test_get_voli():
     response = requests.get(url="http://localhost:5000/voli", headers=headers)
     _show_response(response, n=5)
 
+def test_get_nazione(nome_nazione: str, n:int):
+    response = requests.get(url=f"http://localhost:5000/nazioni/{nome_nazione}", headers=headers)
+    _show_response(response, n)
 
+def test_get_citta(id_citta: int, n:int):
+    response = requests.get(url=f"http://localhost:5000/citta/{id_citta}", headers=headers)
+    _show_response(response, n=n)
 
 if __name__ == "__main__":
     test_get_nazioni()
-    test_get_citta()
+    test_get_all_citta()
     test_get_compagnie()
     test_get_aeroporti()
     test_get_voli()
+    test_get_nazione("Jamaica", 6)
+    test_get_nazione("Francia", 7)
+    test_get_citta(165, 8)
 
 
 

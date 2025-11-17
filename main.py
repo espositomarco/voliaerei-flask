@@ -18,12 +18,35 @@ def get_nazioni():
     nazioni: dict[str, dict[str, str]] = dati['Nazione']
     return jsonify(nazioni), 200
 
+@app.route('/nazioni/<string:nome>', methods=['GET'])
+def get_nazione(nome:str):
+    dati = load_data_from_db()
+    print(dati['Nazione'])
+    if nome not in dati['Nazione']:
+        return jsonify({"error": f"La nazione con nome {nome} non esiste!"}), 404
+    nazione: dict[str, str] = dati['Nazione'][nome]
+    return jsonify(nazione), 200
+
 @app.route('/citta', methods=['GET'])
-def get_citta():
+def get_all_citta():
     dati = load_data_from_db()
     citta: dict[str, dict[str, str | int]] = dati['Citta']
     return jsonify(citta), 200
 
+@app.route('/citta/<int:id_citta>', methods=['GET'])
+def get_citta(id_citta:int):
+    dati = load_data_from_db()
+    all_citta: dict[str, dict[str, str]] = dati['Citta']
+    try:
+        citta = all_citta[str(id_citta)]
+        return jsonify(citta), 200
+    except KeyError as e:
+        return (jsonify({"errore": f"La citta con id {id_citta} non esiste! "
+                                  f"Errore da python: KeyError: {str(e)}"})
+                    , 404)
+
+
+def add_nazione
 
 @app.route('/aeroporti', methods=['GET'])
 def get_aeroporti():
