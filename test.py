@@ -18,5 +18,7 @@ if __name__ == "__main__":
 
     nazioni_response = requests.get(url="http://localhost:5000/nazioni",
                                     headers=headers)
-
+    print(f"RESPONSE:\n"
+          f"\tHTTP Status Code: {nazioni_response.status_code}\n"
+          f"\tJSON CONTENT:")
     print(json.dumps(nazioni_response.json(), indent=4))
