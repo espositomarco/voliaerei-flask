@@ -45,9 +45,15 @@ def test_get_nazione(nome_nazione: str, n:int):
     response = requests.get(url=f"http://localhost:5000/nazioni/{nome_nazione}", headers=headers)
     _show_response(response, n)
 
+
 def test_get_citta(id_citta: int, n:int):
     response = requests.get(url=f"http://localhost:5000/citta/{id_citta}", headers=headers)
     _show_response(response, n=n)
+
+def test_create_nazione(nome_nazione: str, n:int):
+    response = requests.post(url=f"http://localhost:5000/nazioni", headers=headers,
+                             json={"nome": nome_nazione})
+    _show_response(response, n)
 
 if __name__ == "__main__":
     test_get_nazioni()
@@ -58,6 +64,7 @@ if __name__ == "__main__":
     test_get_nazione("Jamaica", 6)
     test_get_nazione("Francia", 7)
     test_get_citta(165, 8)
+    test_create_nazione(nome_nazione="Jamaica", n=9)
 
 
 

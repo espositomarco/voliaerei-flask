@@ -1,6 +1,7 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
-from db.utils import load_data_from_db
+from db.utils import load_data_from_db, store_data_on_db
+
 app = Flask(__name__)
 
 @app.route('/')
@@ -45,8 +46,21 @@ def get_citta(id_citta:int):
                                   f"Errore da python: KeyError: {str(e)}"})
                     , 404)
 
+@app.route('/nazioni', methods=['POST'])
+def add_nazione():
+    new_nazione: dict = request.get_json() #prendo il body della richiesta come json
+    if "nome" not in new_nazione:
+        return jsonify({"errore": "Per creare una nazione, fornire il nome!"}), 400
+    dati = load_data_from_db()
+    nazioni = dati['Nazione']
+    if new_nazione["nome"] in nazioni:
+        return jsonify({"errore": f"Esiste già una nazione con nome {new_nazione['nome']}!"}), 400
 
-def add_nazione
+    dati['Nazione'][new_nazione["nome"]] = new_nazione
+    store_data_on_db(dati)
+    return jsonify(new_nazione), 201
+
+
 
 @app.route('/aeroporti', methods=['GET'])
 def get_aeroporti():

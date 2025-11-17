@@ -10,5 +10,5 @@ def load_data_from_db() -> dict:
         return json.load(f)
 
 def store_data_on_db(data) -> None:
-    with open(MOCKUP_DB_INIT_JSON_FILENAME, "w+") as f:
-        json.dump(data, f)
+    with open(MOCKUP_DB_JSON_FILENAME, "w+") as f:
+        json.dump(data, f, indent=4)
