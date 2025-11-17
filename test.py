@@ -2,23 +2,53 @@ import requests
 # va installato con 'pip install requests'
 
 import json
-if __name__ == "__main__":
-    headers = {
+headers = {
             'Content-type': 'application/json',
             'Accept': 'application/json'
         }
 
-    response = requests.get(url="http://localhost:5000/",
-                            headers=headers)
+def _show_response(response: requests.Response, n:int = 1):
+    print(f"\n\n{"=" * 10} TEST {n} - GET {response.url} {"=" * 10}")
+    print(f"\nRESPONSE:\n"
+          f"- HTTP Status Code: {response.status_code}\n"
+          f"- JSON CONTENT:")
+    print(json.dumps(response.json(), indent=4))
 
-    print(response.json())
 
+def test_get_nazioni():
     # TEST 1 - GET /nazioni
-    print(f"\n\n{"="*10} TEST 1 - GET /nazioni {"="*10}")
+    response = requests.get(url="http://localhost:5000/nazioni", headers=headers)
+    _show_response(response, n=1)
 
-    nazioni_response = requests.get(url="http://localhost:5000/nazioni",
-                                    headers=headers)
-    print(f"RESPONSE:\n"
-          f"\tHTTP Status Code: {nazioni_response.status_code}\n"
-          f"\tJSON CONTENT:")
-    print(json.dumps(nazioni_response.json(), indent=4))
+def test_get_citta():
+    # TEST 2 - GET /citta
+    response = requests.get(url="http://localhost:5000/citta", headers=headers)
+    _show_response(response, n=2)
+
+
+def test_get_compagnie():
+    # TEST 3 - GET /compagnie
+    response = requests.get(url="http://localhost:5000/compagnie", headers=headers)
+    _show_response(response, n=3)
+
+def test_get_aeroporti():
+    # TEST 4 - GET /aeroporti
+    response = requests.get(url="http://localhost:5000/aeroporti", headers=headers)
+    _show_response(response, n=4)
+
+def test_get_voli():
+    # TEST 5 - GET /aeroporti
+    response = requests.get(url="http://localhost:5000/voli", headers=headers)
+    _show_response(response, n=5)
+
+
+
+if __name__ == "__main__":
+    test_get_nazioni()
+    test_get_citta()
+    test_get_compagnie()
+    test_get_aeroporti()
+    test_get_voli()
+
+
+
