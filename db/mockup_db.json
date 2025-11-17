@@ -1,0 +1,66 @@
+{
+    "Nazioni": {
+        "Italia" : {
+            "nome": "Italia"
+        },
+        "Francia" : {
+            "nome": "Francia"
+        }
+    },
+    "Citta": {
+        "1" : {
+            "id": 1,
+            "nome": "Roma",
+            "n_abitanti": 2746984,
+            "nazione": "Italia"
+        },
+        "2" : {
+            "id": 2,
+            "nome": "Parigi",
+            "n_abitanti": 2200000,
+            "nazione": "Francia"
+        }
+    },
+    "Aeroporto": {
+        "FCO": {
+            "codice": "FCO",
+            "nome": "Aeroporto internazionale di Roma-Fiumicino 'Leonardo da Vinci'",
+            "citta": 1
+        },
+        "CDG": {
+            "codice": "CDG",
+            "nome": "Charles de Gaulle",
+            "citta": 2
+        }
+    },
+    "Compagnia": {
+        "1": {
+            "id": 1,
+            "nome": "MagicFly",
+            "fondazione": 1990,
+            "citta": 1
+        },
+        "2": {
+            "id": 2,
+            "nome": "FranceAir",
+            "fondazione": 1992,
+            "citta": 2
+        }
+    },
+    "Volo": {
+        "MF001" : {
+            "codice": "MF001",
+            "durata_minuti": 150,
+            "partenza": "FCO",
+            "arrivo": "CDG",
+            "compagnia": 1
+        },
+        "FA001" : {
+            "codice": "FA001",
+            "durata_minuti": 150,
+            "partenza": "CDG",
+            "arrivo": "FCO",
+            "compagnia": 2
+        }
+    }
+}
