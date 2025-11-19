@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 
-from db.utils import load_data_from_db, store_data_on_db
+from data_model.classes import Nazione
+from db.utils import load_data_from_db, store_data_on_db, get_nazioni_from_db, inser_nazione_on_db
 
 app = Flask(__name__)
 
@@ -15,9 +16,11 @@ def get_all():
 
 @app.route('/nazioni', methods=['GET'])
 def get_nazioni():
-    dati = load_data_from_db()
-    nazioni: dict[str, dict[str, str]] = dati['Nazione']
-    return jsonify(nazioni), 200
+    nazioni: dict[str, Nazione] = get_nazioni_from_db()
+    all_info: dict = {}
+    for nome, nazione in nazioni.items():
+        all_info[nome] = nazione.info()
+    return jsonify(all_info), 200
 
 @app.route('/nazioni/<string:nome>', methods=['GET'])
 def get_nazione(nome:str):
@@ -54,10 +57,12 @@ def add_nazione():
     dati = load_data_from_db()
     nazioni = dati['Nazione']
     if new_nazione["nome"] in nazioni:
-        return jsonify({"errore": f"Esiste già una nazione con nome {new_nazione['nome']}!"}), 400
+        return jsonify({"errore": f"Esiste gia' una nazione con nome {new_nazione['nome']}!"}), 400
 
-    dati['Nazione'][new_nazione["nome"]] = new_nazione
-    store_data_on_db(dati)
+
+    new_nazione: Nazione = Nazione(new_nazione["nome"])
+
+    inser_nazione_on_db(new_nazione)
     return jsonify(new_nazione), 201
 
 
