@@ -6,7 +6,7 @@ if TYPE_CHECKING:
     from data_model.nazione import Nazione
 
 class Citta:
-    _nome: str
+    _nome: str # immutabile
     _abitanti: int
     _nazione: 'Nazione'
 
@@ -14,7 +14,8 @@ class Citta:
                  abitanti: int,
                  nazione: 'Nazione'):
 
-        self.set_nome(nome)
+        # self.set_nome(nome) reso immutabile
+        self._nome = nome
         self.set_abitanti(abitanti)
         self.set_nazione(nazione)
         # TODO scrivi su db
@@ -26,9 +27,9 @@ class Citta:
     def abitanti(self) -> int:
         return self._abitanti
 
-    def set_nome(self, nome: str) -> None:
+    '''def set_nome(self, nome: str) -> None:
         self._nome = nome
-        # TODO scrivi su db
+        # TODO scrivi su db'''
 
     def set_abitanti(self, abitanti: int) -> None:
         self._abitanti = abitanti
@@ -46,7 +47,17 @@ class Citta:
         nazione._add_citta(self)
         # TODO scrivi su db
 
+
+
     def __repr__(self) -> str:
         return f"Citta(nome='{self.nome()}', abitanti={self.abitanti()}, nazione={self.nazione()})"
 
+    def info(self) -> dict[str, dict[str, str]]:
+        return {self.nome():
+            {
+                'nome': self.nome(),
+                'abitanti': self.abitanti(),
+                'nazione': self.nazione().nome()
+            }
+        }
 

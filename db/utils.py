@@ -25,10 +25,24 @@ def load_nazioni() -> dict[str, Nazione]:
     result: dict[str, Nazione] = dict()
 
     for nazione_nome, nazione_dict in nazioni_dict.items():
-        nazione: Nazione = Nazione(nazione_dict["nome"])
+        nazione: Nazione = Nazione(nome=nazione_dict["nome"],
+                                   fondazione=nazione_dict["fondazione"])
         result[nazione_nome] = nazione
 
     return result
+
+def store_nazione(nazione: Nazione) -> None:
+    dati = load_data_from_db()
+    # devo controllare se la nazione c'è già
+    # se sì, la cancello
+    nazioni_dict = dati["Nazione"]
+    if nazione.nome() in nazioni_dict:
+        nazioni_dict.pop(nazione.nome())
+
+    nazione_info: dict[str, str] = nazione.info()
+
+    nazioni_dict[nazione.nome()] = nazione_info
+    store_data_on_db(dati)
 
 def load_citta(nazioni: dict[str, Nazione]) -> dict[str, Citta]:
     dati = load_data_from_db()

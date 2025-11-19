@@ -2,7 +2,7 @@ import sys
 
 from data_model.citta import Citta
 from data_model.nazione import Nazione
-from db.utils import load_nazioni, load_citta
+from db.utils import load_nazioni, load_citta, store_nazione
 
 if __name__ == "__main__":
 
@@ -13,6 +13,12 @@ if __name__ == "__main__":
 
     for nazione in nazioni.values():
         print(nazione.citta())
+
+
+    italia: Nazione = nazioni.get('Italia')
+    italia.set_fondazione(1947)
+    store_nazione(italia)
+
 
     sys.exit(0)
     italia: Nazione = Nazione(nome="Italia")

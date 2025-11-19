@@ -11,19 +11,28 @@ if TYPE_CHECKING:
 class Nazione:
 
     _nome: str
+    _fondazione: int
     _citta: set['Citta']
 
-    def __init__(self, nome: str) -> None:
-        self.set_nome(nome)
+    def __init__(self, nome: str, fondazione:int) -> None:
+        # self.set_nome(nome)
+        self._nome = nome
         self._citta = set()
+        self._fondazione = fondazione
         # TODO scrivi su db
 
     def nome(self) -> str:
         return self._nome
 
-    def set_nome(self, nome: str) -> None:
+    '''def set_nome(self, nome: str) -> None:
         self._nome = nome
-        # TODO scrivi su db
+        # TODO scrivi su db'''
+
+    def fondazione(self) -> int:
+        return self._fondazione
+
+    def set_fondazione(self, fondazione: int) -> None:
+        self._fondazione = fondazione
 
     def citta(self) -> frozenset['Citta']:
         return frozenset(self._citta)
@@ -43,12 +52,8 @@ class Nazione:
         return f"Nazione(nome='{self._nome}')"
 
 
-    def info(self) -> dict[str, dict[str, str]]:
-        return {self.nome():
-            {
+    def info(self) -> dict[str, str]:
+        return {
                 'nome': self.nome(),
+                'fondazione': self.fondazione()
             }
-        }
-
-
-
