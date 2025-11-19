@@ -57,8 +57,12 @@ def test_get_citta(id_citta: int, n:int):
     _show_response(response, n=n)
 
 def test_create_nazione(nome_nazione: str, n:int):
-    response = requests.post(url=f"http://localhost:5000/nazioni", headers=headers,
+
+    response = requests.post(url=f"http://localhost:5000/nazioni",
+                             headers=headers,
                              json={"nome": nome_nazione})
+
+
     response.encoding = "utf-8"
     _show_response(response, n)
 
