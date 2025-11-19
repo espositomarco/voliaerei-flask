@@ -43,4 +43,12 @@ class Nazione:
         return f"Nazione(nome='{self._nome}')"
 
 
+    def info(self) -> dict[str, dict[str, str]]:
+        return {self.nome():
+            {
+                'nome': self.nome(),
+            }
+        }
+
+
 

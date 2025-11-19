@@ -1,8 +1,20 @@
+import sys
+
 from data_model.citta import Citta
 from data_model.nazione import Nazione
-import os
+from db.utils import load_nazioni, load_citta
+
 if __name__ == "__main__":
-    print(os.path.abspath(os.path.curdir))
+
+    nazioni: dict[str, Nazione] = load_nazioni()
+    print(nazioni)
+    all_citta: dict[str, Citta] = load_citta(nazioni)
+    print(all_citta)
+
+    for nazione in nazioni.values():
+        print(nazione.citta())
+
+    sys.exit(0)
     italia: Nazione = Nazione(nome="Italia")
     jugo: Nazione = Nazione(nome="Jugo")
 

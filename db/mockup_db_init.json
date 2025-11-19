@@ -8,14 +8,12 @@
         }
     },
     "Citta": {
-        "1" : {
-            "id": 1,
+        "Roma" : {
             "nome": "Roma",
             "n_abitanti": 2746984,
             "nazione": "Italia"
         },
-        "2" : {
-            "id": 2,
+        "Parigi" : {
             "nome": "Parigi",
             "n_abitanti": 2200000,
             "nazione": "Francia"

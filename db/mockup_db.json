@@ -1,24 +1,19 @@
 {
     "Nazione": {
-        "Italia": {
+        "Italia" : {
             "nome": "Italia"
         },
-        "Francia": {
+        "Francia" : {
             "nome": "Francia"
-        },
-        "Jamaica": {
-            "nome": "Jamaica"
         }
     },
     "Citta": {
-        "1": {
-            "id": 1,
+        "Roma" : {
             "nome": "Roma",
             "n_abitanti": 2746984,
             "nazione": "Italia"
         },
-        "2": {
-            "id": 2,
+        "Parigi" : {
             "nome": "Parigi",
             "n_abitanti": 2200000,
             "nazione": "Francia"
@@ -51,14 +46,14 @@
         }
     },
     "Volo": {
-        "MF0101": {
+        "MF001" : {
             "codice": "MF001",
             "durata_minuti": 150,
             "partenza": "FCO",
             "arrivo": "CDG",
             "compagnia": 1
         },
-        "FA0101": {
+        "FA001" : {
             "codice": "FA001",
             "durata_minuti": 150,
             "partenza": "CDG",
