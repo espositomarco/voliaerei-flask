@@ -1,7 +1,8 @@
 from data_model.citta import Citta
 from data_model.nazione import Nazione
-
+import os
 if __name__ == "__main__":
+    print(os.path.abspath(os.path.curdir))
     italia: Nazione = Nazione(nome="Italia")
     jugo: Nazione = Nazione(nome="Jugo")
 

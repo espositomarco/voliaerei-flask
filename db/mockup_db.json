@@ -51,14 +51,14 @@
         }
     },
     "Volo": {
-        "MF001": {
+        "MF0101": {
             "codice": "MF001",
             "durata_minuti": 150,
             "partenza": "FCO",
             "arrivo": "CDG",
             "compagnia": 1
         },
-        "FA001": {
+        "FA0101": {
             "codice": "FA001",
             "durata_minuti": 150,
             "partenza": "CDG",
