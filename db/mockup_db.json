@@ -1,12 +1,16 @@
 {
     "Nazione": {
+        "Italia": {
+            "nome": "Italia",
+            "fondazione": 1861
+        },
         "Francia": {
             "nome": "Francia",
             "fondazione": 1789
         },
-        "Italia": {
-            "nome": "Italia",
-            "fondazione": 1947
+        "Jamaica": {
+            "nome": "Jamaica",
+            "fondazione": 1962
         }
     },
     "Citta": {

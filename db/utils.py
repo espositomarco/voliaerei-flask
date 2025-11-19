@@ -1,5 +1,6 @@
 import json
 import os
+from typing import TYPE_CHECKING
 
 from data_model.citta import Citta
 from data_model.nazione import Nazione
@@ -17,7 +18,7 @@ def store_data_on_db(data) -> None:
         json.dump(data, f, indent=4)
 
 
-def load_nazioni() -> dict[str, Nazione]:
+def load_nazioni() -> dict[str, 'Nazione']:
     with open(MOCKUP_DB_INIT_JSON_FILENAME) as f:
         data = json.load(f)
     nazioni_dict = data["Nazione"]
@@ -57,4 +58,11 @@ def load_citta(nazioni: dict[str, Nazione]) -> dict[str, Citta]:
                              nazione=nazione)
         result[citta.nome()] = citta
 
+    return result
+
+
+def nazioni_info(nazioni: dict[str, Nazione]) -> dict[str, dict[str, int | str]]:
+    result: dict[str, dict[str, int | str]] = dict()
+    for nazione in nazioni.values():
+        result[nazione.nome()] = nazione.info()
     return result

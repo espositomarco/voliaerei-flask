@@ -1,3 +1,5 @@
+import sys
+
 import requests
 # va installato con 'pip install requests'
 
@@ -56,11 +58,11 @@ def test_get_citta(id_citta: int, n:int):
     response = requests.get(url=f"http://localhost:5000/citta/{id_citta}", headers=headers)
     _show_response(response, n=n)
 
-def test_create_nazione(nome_nazione: str, n:int):
+def test_create_nazione(nome_nazione: str, fondazione: int, n:int):
 
     response = requests.post(url=f"http://localhost:5000/nazioni",
                              headers=headers,
-                             json={"nome": nome_nazione})
+                             json={"nome": nome_nazione, "fondazione": fondazione})
 
 
     response.encoding = "utf-8"
@@ -75,7 +77,7 @@ if __name__ == "__main__":
     test_get_nazione("Jamaica", 6)
     test_get_nazione("Francia", 7)
     test_get_citta(165, 8)
-    test_create_nazione(nome_nazione="Jamaica", n=9)
+    test_create_nazione(nome_nazione="Jamaica", fondazione=1962, n=9)
 
 
 

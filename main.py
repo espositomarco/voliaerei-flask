@@ -1,8 +1,19 @@
+from collections import namedtuple
+
 from flask import Flask, jsonify, request
 
-from db.utils import load_data_from_db, store_data_on_db
+from data_model.nazione import Nazione
+from db.utils import load_data_from_db, store_data_on_db, load_nazioni, load_citta, nazioni_info
 
 app = Flask(__name__)
+db = namedtuple("mockup_db", "nazioni citta")
+
+
+db.nazioni = load_nazioni()
+db.citta = load_citta(db.nazioni)
+# TODO carica tutto il resto
+
+app.mockup_db = db
 
 @app.route('/')
 def initial_message():
@@ -15,9 +26,12 @@ def get_all():
 
 @app.route('/nazioni', methods=['GET'])
 def get_nazioni():
-    dati = load_data_from_db()
-    nazioni: dict[str, dict[str, str]] = dati['Nazione']
-    return jsonify(nazioni), 200
+    # dati = load_data_from_db()
+    # nazioni: dict[str, dict[str, str]] = dati['Nazione']
+    nazioni: dict[str, Nazione] =  app.mockup_db.nazioni
+    all_nazioni_info = nazioni_info(nazioni)
+    print(all_nazioni_info)
+    return jsonify(all_nazioni_info), 200
 
 @app.route('/nazioni/<string:nome>', methods=['GET'])
 def get_nazione(nome:str):
@@ -48,17 +62,21 @@ def get_citta(id_citta:int):
 
 @app.route('/nazioni', methods=['POST'])
 def add_nazione():
-    new_nazione: dict = request.get_json() #prendo il body della richiesta come json
-    if "nome" not in new_nazione:
+    new_nazione_dict: dict = request.get_json() #prendo il body della richiesta come json
+    if "nome" not in new_nazione_dict:
+        return jsonify({"errore": "Per creare una nazione, fornire il nome!"}), 400
+    elif "fondazione" not in new_nazione_dict:
         return jsonify({"errore": "Per creare una nazione, fornire il nome!"}), 400
     dati = load_data_from_db()
     nazioni = dati['Nazione']
-    if new_nazione["nome"] in nazioni:
-        return jsonify({"errore": f"Esiste gia' una nazione con nome {new_nazione['nome']}!"}), 400
+    if new_nazione_dict["nome"] in nazioni:
+        return jsonify({"errore": f"Esiste gia' una nazione con nome {new_nazione_dict['nome']}!"}), 400
 
-    dati['Nazione'][new_nazione["nome"]] = new_nazione
-    store_data_on_db(dati)
-    return jsonify(new_nazione), 201
+    new_nazione_obj: Nazione = Nazione(nome=new_nazione_dict["nome"],
+                                       fondazione=new_nazione_dict["fondazione"])
+    '''dati['Nazione'][new_nazione_dict["nome"]] = new_nazione_dict
+    store_data_on_db(dati)'''
+    return jsonify(new_nazione_obj.info()), 201
 
 
 

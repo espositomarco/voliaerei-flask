@@ -17,7 +17,9 @@ if __name__ == "__main__":
 
     italia: Nazione = nazioni.get('Italia')
     italia.set_fondazione(1947)
-    store_nazione(italia)
+
+    francia: Nazione = nazioni.get('Francia')
+    francia.set_fondazione(1900)
 
 
     sys.exit(0)

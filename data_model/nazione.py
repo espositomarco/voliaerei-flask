@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from data_model.citta import Citta
 
@@ -19,7 +20,9 @@ class Nazione:
         self._nome = nome
         self._citta = set()
         self._fondazione = fondazione
-        # TODO scrivi su db
+
+        import db.utils
+        db.utils.store_nazione(self)
 
     def nome(self) -> str:
         return self._nome
@@ -33,6 +36,8 @@ class Nazione:
 
     def set_fondazione(self, fondazione: int) -> None:
         self._fondazione = fondazione
+        import db.utils
+        db.utils.store_nazione(self)
 
     def citta(self) -> frozenset['Citta']:
         return frozenset(self._citta)
