@@ -18,7 +18,9 @@ class Citta:
         self._nome = nome
         self.set_abitanti(abitanti)
         self.set_nazione(nazione)
-        # TODO scrivi su db
+
+        import db.utils
+        db.utils.store_citta(self)
 
 
     def nome(self) -> str:
@@ -33,7 +35,11 @@ class Citta:
 
     def set_abitanti(self, abitanti: int) -> None:
         self._abitanti = abitanti
-        # TODO scrivi su db
+        try:
+            import db.utils
+            db.utils.store_citta(self)
+        except AttributeError:
+            pass
 
     def nazione(self) -> 'Nazione':
         return self._nazione
@@ -45,19 +51,22 @@ class Citta:
             pass
         self._nazione = nazione
         nazione._add_citta(self)
-        # TODO scrivi su db
+        try:
+            import db.utils
+            db.utils.store_citta(self)
+        except AttributeError:
+            pass
 
 
 
     def __repr__(self) -> str:
         return f"Citta(nome='{self.nome()}', abitanti={self.abitanti()}, nazione={self.nazione()})"
 
-    def info(self) -> dict[str, dict[str, str]]:
-        return {self.nome():
-            {
+    def info(self) -> dict[str, str]:
+        return {
                 'nome': self.nome(),
-                'abitanti': self.abitanti(),
+                'n_abitanti': self.abitanti(),
                 'nazione': self.nazione().nome()
             }
-        }
+
 

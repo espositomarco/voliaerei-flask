@@ -6,7 +6,6 @@ from data_model.citta import Citta
 from data_model.nazione import Nazione
 
 current_dir = os.path.curdir
-MOCKUP_DB_INIT_JSON_FILENAME = os.path.join(current_dir, "db", "mockup_db_init.json")
 MOCKUP_DB_JSON_FILENAME = os.path.join(current_dir, "db", "mockup_db.json")
 
 def load_data_from_db() -> dict:
@@ -19,7 +18,7 @@ def store_data_on_db(data) -> None:
 
 
 def load_nazioni() -> dict[str, 'Nazione']:
-    with open(MOCKUP_DB_INIT_JSON_FILENAME) as f:
+    with open(MOCKUP_DB_JSON_FILENAME) as f:
         data = json.load(f)
     nazioni_dict = data["Nazione"]
 
@@ -60,9 +59,29 @@ def load_citta(nazioni: dict[str, Nazione]) -> dict[str, Citta]:
 
     return result
 
+def store_citta(citta: Citta) -> None:
+    dati = load_data_from_db()
+    # devo controllare se la citta c'è già
+    # se sì, la cancello
+    citta_dict = dati["Citta"]
+    if citta.nome() in citta_dict:
+        citta_dict.pop(citta.nome())
+
+    citta_info: dict[str, str] = citta.info()
+
+    citta_dict[citta.nome()] = citta_info
+    store_data_on_db(dati)
 
 def nazioni_info(nazioni: dict[str, Nazione]) -> dict[str, dict[str, int | str]]:
     result: dict[str, dict[str, int | str]] = dict()
     for nazione in nazioni.values():
         result[nazione.nome()] = nazione.info()
     return result
+
+
+def all_citta_info(citta: dict[str, Citta]) -> dict[str, dict[str, int | str]]:
+    result: dict[str, dict[str, int | str]] = dict()
+    for c in citta.values():
+        result[c.nome()] = c.info()
+    return result
+

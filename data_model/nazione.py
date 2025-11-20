@@ -57,8 +57,20 @@ class Nazione:
         return f"Nazione(nome='{self._nome}')"
 
 
-    def info(self) -> dict[str, str]:
+    def info(self) -> dict[str, str | int]:
         return {
                 'nome': self.nome(),
                 'fondazione': self.fondazione()
             }
+
+    def as_dict(self) -> dict[str, str | int | dict[str,str]]:
+        res: dict[str, str | int | dict[str, str]] = {
+                'nome': self.nome(),
+                'fondazione': self.fondazione(),
+
+            }
+        citta_dict: dict[str, str] = dict()
+        for citta in self.citta():
+            citta_dict[citta.nome()] = f"/citta/{citta.nome()}"
+        res['citta'] = citta_dict
+        return res

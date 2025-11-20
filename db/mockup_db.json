@@ -1,5 +1,9 @@
 {
     "Nazione": {
+        "Padania": {
+            "nome": "Padania",
+            "fondazione": 2025
+        },
         "Italia": {
             "nome": "Italia",
             "fondazione": 1861
@@ -7,10 +11,6 @@
         "Francia": {
             "nome": "Francia",
             "fondazione": 1789
-        },
-        "Jamaica": {
-            "nome": "Jamaica",
-            "fondazione": 1962
         }
     },
     "Citta": {
@@ -22,6 +22,11 @@
         "Parigi": {
             "nome": "Parigi",
             "n_abitanti": 2200000,
+            "nazione": "Francia"
+        },
+        "Milano": {
+            "nome": "Milano",
+            "n_abitanti": 1350000,
             "nazione": "Francia"
         }
     },
