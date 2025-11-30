@@ -1,0 +1,727 @@
+openapi: 3.0.0
+info:
+  title: Sistema Voli API
+  description: API REST per la gestione di voli, compagnie aeree, città e aeroporti
+  version: 1.0.0
+servers:
+  - url: http://localhost:5000
+    description: Development server
+
+paths:
+  /:
+    get:
+      summary: Messaggio di benvenuto
+      tags:
+        - General
+      responses:
+        '200':
+          description: Messaggio di benvenuto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  response:
+                    type: string
+                    example: Questo è il messaggio di benvenuto
+
+  /all:
+    get:
+      summary: Restituisce tutti i dati
+      tags:
+        - General
+      responses:
+        '200':
+          description: Tutti i dati del database
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Nazione:
+                    type: object
+                  Citta:
+                    type: object
+                  Compagnia:
+                    type: object
+                  Aeroporto:
+                    type: object
+                  Volo:
+                    type: object
+
+  /nazioni:
+    get:
+      summary: Lista di tutte le nazioni
+      tags:
+        - Nazioni
+      responses:
+        '200':
+          description: Lista delle nazioni
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Nazione'
+
+    post:
+      summary: Crea una nuova nazione
+      tags:
+        - Nazioni
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NazioneInput'
+      responses:
+        '201':
+          description: Nazione creata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nazione'
+        '400':
+          description: Errore nei dati inviati
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /nazioni/{nome}:
+    get:
+      summary: Dettagli di una nazione
+      tags:
+        - Nazioni
+      parameters:
+        - name: nome
+          in: path
+          required: true
+          description: Nome della nazione
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dettagli della nazione
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nazione'
+        '404':
+          description: Nazione non trovata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    patch:
+      summary: Aggiorna una nazione
+      tags:
+        - Nazioni
+      parameters:
+        - name: nome
+          in: path
+          required: true
+          description: Nome della nazione
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fondazione:
+                  type: integer
+                  example: 1861
+      responses:
+        '200':
+          description: Nazione aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Nazione'
+        '400':
+          description: Errore nei dati
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Nazione non trovata
+
+  /citta:
+    get:
+      summary: Lista di tutte le città
+      tags:
+        - Città
+      responses:
+        '200':
+          description: Lista delle città
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Citta'
+
+    post:
+      summary: Crea una nuova città
+      tags:
+        - Città
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CittaInput'
+      responses:
+        '201':
+          description: Città creata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Citta'
+        '400':
+          description: Errore nei dati inviati
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Nazione non trovata
+
+  /citta/{nome_citta}:
+    get:
+      summary: Dettagli di una città
+      tags:
+        - Città
+      parameters:
+        - name: nome_citta
+          in: path
+          required: true
+          description: Nome della città
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dettagli della città
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Citta'
+        '404':
+          description: Città non trovata
+
+    patch:
+      summary: Aggiorna una città
+      tags:
+        - Città
+      parameters:
+        - name: nome_citta
+          in: path
+          required: true
+          description: Nome della città
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                abitanti:
+                  type: integer
+                nazione:
+                  type: string
+      responses:
+        '200':
+          description: Città aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Citta'
+        '400':
+          description: Errore nei dati
+
+  /compagnie:
+    get:
+      summary: Lista di tutte le compagnie
+      tags:
+        - Compagnie
+      responses:
+        '200':
+          description: Lista delle compagnie
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Compagnia'
+
+    post:
+      summary: Crea una nuova compagnia
+      tags:
+        - Compagnie
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompagniaInput'
+      responses:
+        '201':
+          description: Compagnia creata con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compagnia'
+        '400':
+          description: Errore nei dati inviati
+        '404':
+          description: Città non trovata
+
+  /compagnie/{nome}:
+    get:
+      summary: Dettagli di una compagnia
+      tags:
+        - Compagnie
+      parameters:
+        - name: nome
+          in: path
+          required: true
+          description: Nome della compagnia
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dettagli della compagnia
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compagnia'
+        '404':
+          description: Compagnia non trovata
+
+    patch:
+      summary: Aggiorna una compagnia
+      tags:
+        - Compagnie
+      parameters:
+        - name: nome
+          in: path
+          required: true
+          description: Nome della compagnia
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                citta:
+                  type: string
+      responses:
+        '200':
+          description: Compagnia aggiornata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Compagnia'
+
+  /aeroporti:
+    get:
+      summary: Lista di tutti gli aeroporti
+      tags:
+        - Aeroporti
+      responses:
+        '200':
+          description: Lista degli aeroporti
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Aeroporto'
+
+    post:
+      summary: Crea un nuovo aeroporto
+      tags:
+        - Aeroporti
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AeroportoInput'
+      responses:
+        '201':
+          description: Aeroporto creato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aeroporto'
+        '400':
+          description: Errore nei dati inviati
+        '404':
+          description: Città non trovata
+
+  /aeroporti/{codice}:
+    get:
+      summary: Dettagli di un aeroporto
+      tags:
+        - Aeroporti
+      parameters:
+        - name: codice
+          in: path
+          required: true
+          description: Codice IATA dell'aeroporto
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dettagli dell'aeroporto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aeroporto'
+        '404':
+          description: Aeroporto non trovato
+
+    patch:
+      summary: Aggiorna un aeroporto
+      tags:
+        - Aeroporti
+      parameters:
+        - name: codice
+          in: path
+          required: true
+          description: Codice IATA dell'aeroporto
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nome:
+                  type: string
+      responses:
+        '200':
+          description: Aeroporto aggiornato
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aeroporto'
+
+  /voli:
+    get:
+      summary: Lista di tutti i voli
+      tags:
+        - Voli
+      responses:
+        '200':
+          description: Lista dei voli
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volo'
+
+    post:
+      summary: Crea un nuovo volo
+      tags:
+        - Voli
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoloInput'
+      responses:
+        '201':
+          description: Volo creato con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volo'
+        '400':
+          description: Errore nei dati inviati
+        '404':
+          description: Compagnia o aeroporti non trovati
+
+  /voli/{codice}:
+    get:
+      summary: Dettagli di un volo
+      tags:
+        - Voli
+      parameters:
+        - name: codice
+          in: path
+          required: true
+          description: Codice del volo
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dettagli del volo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Volo'
+        '404':
+          description: Volo non trovato
+
+  /calcola_voli_tra_nazioni:
+    get:
+      summary: Voli tra due nazioni
+      tags:
+        - Calcolo Voli
+      parameters:
+        - name: partenza
+          in: query
+          required: true
+          description: Nome nazione di partenza
+          schema:
+            type: string
+        - name: arrivo
+          in: query
+          required: true
+          description: Nome nazione di arrivo
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista dei voli disponibili
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volo'
+        '404':
+          description: Nazioni non trovate
+
+  /calcola_voli_tra_citta:
+    get:
+      summary: Voli tra due città
+      tags:
+        - Calcolo Voli
+      parameters:
+        - name: partenza
+          in: query
+          required: true
+          description: Nome città di partenza
+          schema:
+            type: string
+        - name: arrivo
+          in: query
+          required: true
+          description: Nome città di arrivo
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista dei voli disponibili
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volo'
+        '404':
+          description: Città non trovate
+
+  /aeroporti/{codice}/voli_verso:
+    get:
+      summary: Voli da un aeroporto ad un altro
+      tags:
+        - Calcolo Voli
+      parameters:
+        - name: codice
+          in: path
+          required: true
+          description: Codice IATA aeroporto di partenza
+          schema:
+            type: string
+        - name: arrivo
+          in: query
+          required: true
+          description: Codice IATA aeroporto di arrivo
+          schema:
+            type: string
+        - name: durata_max
+          in: query
+          required: false
+          description: Durata massima in minuti
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista dei voli disponibili
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Volo'
+        '404':
+          description: Aeroporti non trovati
+
+components:
+  schemas:
+    Nazione:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: Italia
+        fondazione:
+          type: integer
+          example: 1861
+
+    NazioneInput:
+      type: object
+      required:
+        - nome
+        - fondazione
+      properties:
+        nome:
+          type: string
+        fondazione:
+          type: integer
+
+    Citta:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: Roma
+        abitanti:
+          type: integer
+          example: 2873000
+        nazione:
+          type: string
+          example: Italia
+
+    CittaInput:
+      type: object
+      required:
+        - nome
+        - abitanti
+        - nazione
+      properties:
+        nome:
+          type: string
+        abitanti:
+          type: integer
+        nazione:
+          type: string
+
+    Compagnia:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: Alitalia
+        fondazione:
+          type: integer
+          example: 1946
+        citta:
+          type: string
+          example: Roma
+
+    CompagniaInput:
+      type: object
+      required:
+        - nome
+        - fondazione
+        - citta
+      properties:
+        nome:
+          type: string
+        fondazione:
+          type: integer
+        citta:
+          type: string
+
+    Aeroporto:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: Fiumicino
+        codice:
+          type: string
+          example: FCO
+        citta:
+          type: string
+          example: Roma
+
+    AeroportoInput:
+      type: object
+      required:
+        - nome
+        - codice
+        - citta
+      properties:
+        nome:
+          type: string
+        codice:
+          type: string
+        citta:
+          type: string
+
+    Volo:
+      type: object
+      properties:
+        codice:
+          type: string
+          example: AZ123
+        compagnia:
+          type: string
+          example: Alitalia
+        partenza:
+          type: string
+          example: FCO
+        arrivo:
+          type: string
+          example: MXP
+        durata_minuti:
+          type: integer
+          example: 60
+
+    VoloInput:
+      type: object
+      required:
+        - codice
+        - compagnia
+        - partenza
+        - arrivo
+        - durata_minuti
+      properties:
+        codice:
+          type: string
+        compagnia:
+          type: string
+        partenza:
+          type: string
+        arrivo:
+          type: string
+        durata_minuti:
+          type: integer
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        errore:
+          type: string
