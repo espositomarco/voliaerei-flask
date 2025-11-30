@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
+from data_model.volo import Volo
 
 if TYPE_CHECKING:
     from data_model.citta import Citta
@@ -74,3 +75,11 @@ class Nazione:
             citta_dict[citta.nome()] = f"/citta/{citta.nome()}"
         res['citta'] = citta_dict
         return res
+
+    def get_voli_verso_nazione(self, altra: Nazione, voli: set[Volo]) -> list[dict]:
+        result: list[dict] = []
+        for volo in voli:
+            if (volo.partenza().citta().nazione() == self and
+                volo.arrivo().citta().nazione() == altra):
+                result.append(volo.info())
+        return result

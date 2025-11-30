@@ -409,6 +409,56 @@ def add_volo():
     return jsonify(new_volo_obj.as_dict()), 201
 
 
+@app.route('/calcola_voli_tra_nazioni', methods=['GET'])
+def calcola_voli_nazioni():
+    naz_partenza: str = request.args.get('partenza').capitalize()
+    naz_arrivo: str = request.args.get('arrivo').capitalize()
+    if naz_partenza not in app.mockup_db.nazioni or naz_arrivo not in app.mockup_db.nazioni:
+        return jsonify({"errore": "Assicurarsi che le nazioni specificate esistano!"}), 404
+
+    partenza = app.mockup_db.nazioni[naz_partenza]
+    arrivo = app.mockup_db.nazioni[naz_arrivo]
+    voli: set[dict] = partenza.get_voli_verso_nazione(arrivo, app.mockup_db.voli.values())
+
+    return jsonify(voli), 200
+
+@app.route('/calcola_voli_tra_citta', methods=['GET'])
+def calcola_voli_citta():
+    cit_partenza: str = request.args.get('partenza').capitalize()
+    cit_arrivo: str = request.args.get('arrivo').capitalize()
+    if cit_partenza not in app.mockup_db.citta or cit_arrivo not in app.mockup_db.citta:
+        return jsonify({"errore": "Assicurarsi che le citta' specificate esistano!"}), 404
+
+    partenza = app.mockup_db.citta[cit_partenza]
+    arrivo = app.mockup_db.citta[cit_arrivo]
+    voli: set[dict] = partenza.get_voli_verso_citta(arrivo, app.mockup_db.voli.values())
+
+    return jsonify(voli), 200
+
+
+@app.route('/aeroporti/<string:codice>/voli_verso', methods=['GET'])
+def get_voli_in_partenza(codice:str | CodiceVolo):
+
+    if codice not in app.mockup_db.aeroporti:
+        return jsonify({"errore": "Assicurarsi che l'aeroporto di partenza specificato esista!"}), 404
+
+    aer_arrivo: str = request.args.get('arrivo').upper()
+    durata_max: int | None
+    try:
+        durata_max = int(request.args.get('durata_max'))
+    except:
+        durata_max = None
+
+    if aer_arrivo not in app.mockup_db.aeroporti:
+        return jsonify({"errore": "Assicurarsi che l'aeroporto di destinazione esista'!"}), 404
+    partenza = app.mockup_db.aeroporti[codice]
+    arrivo = app.mockup_db.aeroporti[aer_arrivo]
+
+    voli: set[dict] = partenza.get_voli_verso_aeroporto(arrivo, durata_massima=durata_max)
+
+    return jsonify(voli), 200
+
+
 '''@app.route('/voli', methods=['GET'])
 def get_voli():
     dati = db_utils.load_data_from_db()

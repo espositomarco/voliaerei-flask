@@ -62,3 +62,13 @@ class Aeroporto:
 
     def _add_volo_in_arrivo(self, v: Volo) -> None:
         self._voli_in_arrivo.add(v)
+
+
+    def get_voli_verso_aeroporto(self, altro: Aeroporto, durata_massima: int|None) -> list[dict]:
+        durata_massima: int = durata_massima if durata_massima is not None else 10000000
+        res: list[dict] = list()
+        for volo in self.voli_in_partenza():
+            if volo.arrivo() == altro and volo.durata() <= durata_massima:
+                res.append(volo.info())
+        return res
+

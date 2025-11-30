@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 
 from data_model.custom_types import IntGEZ
+from data_model.volo import Volo
 
 if TYPE_CHECKING:
     from data_model.nazione import Nazione
@@ -98,3 +99,10 @@ class Citta:
                     }'''
 
 
+    def get_voli_verso_citta(self, altra: Citta, voli: set[Volo]) -> list[dict]:
+        result: list[dict] = list()
+        for volo in voli:
+            if (volo.partenza().citta() == self and
+                volo.arrivo().citta() == altra):
+                result.append(volo.info())
+        return result
