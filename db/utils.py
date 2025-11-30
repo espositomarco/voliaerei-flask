@@ -1,9 +1,12 @@
 import json
 import os
-from typing import TYPE_CHECKING
 
+from data_model.aeroporto import Aeroporto
 from data_model.citta import Citta
+from data_model.compagnia import Compagnia
+from data_model.custom_types import CodiceIATA, CodiceVolo
 from data_model.nazione import Nazione
+from data_model.volo import Volo
 
 current_dir = os.path.curdir
 MOCKUP_DB_JSON_FILENAME = os.path.join(current_dir, "db", "mockup_db.json")
@@ -59,6 +62,61 @@ def load_citta(nazioni: dict[str, Nazione]) -> dict[str, Citta]:
 
     return result
 
+def load_compagnie(all_citta: dict[str, Citta]) -> dict[str, Compagnia]:
+    dati = load_data_from_db()
+
+    compagnie_dict: dict[str, dict[str, int | str]] = dati["Compagnia"]
+
+    result: dict[str, Compagnia] = dict()
+    for compagnia_dict in compagnie_dict.values():
+
+        citta: Citta = all_citta[compagnia_dict["citta"]]
+        compagnia: Compagnia = Compagnia(nome=compagnia_dict["nome"],
+                             fondazione=compagnia_dict["fondazione"],
+                             citta=citta)
+        result[compagnia.nome()] = compagnia
+
+    return result
+
+def load_aeroporti(all_citta: dict[str, Citta]) -> dict[str, Aeroporto]:
+    dati = load_data_from_db()
+
+    aeroporti_dict: dict[str, dict[str, int | str]] = dati["Aeroporto"]
+
+    result: dict[str, Aeroporto] = dict()
+    for aeroporto_dict in aeroporti_dict.values():
+
+        citta: Citta = all_citta[aeroporto_dict["citta"]]
+        aeroporto: Aeroporto = Aeroporto(
+            codice=aeroporto_dict["codice"],
+            nome=aeroporto_dict["nome"],
+            citta=citta)
+        result[aeroporto.codice()] = aeroporto
+
+    return result
+
+
+def load_voli(all_aeroporti: dict[str, Aeroporto], all_compagnie: dict[str, Compagnia]) -> dict[str, Volo]:
+    dati = load_data_from_db()
+
+    voli_dict: dict[str, dict[str, int | str]] = dati["Volo"]
+
+    result: dict[str, Volo] = dict()
+    for volo_dict in voli_dict.values():
+
+        compagnia: Compagnia = all_compagnie[volo_dict["compagnia"]]
+        partenza: Aeroporto = all_aeroporti[volo_dict["partenza"]]
+        arrivo: Aeroporto = all_aeroporti[volo_dict["arrivo"]]
+        volo: Volo = Volo(
+            codice=volo_dict["codice"],
+            durata=volo_dict["durata_minuti"],
+            compagnia=compagnia,
+            partenza=partenza,
+            arrivo=arrivo)
+        result[volo.codice()] = volo
+
+    return result
+
 def store_citta(citta: Citta) -> None:
     dati = load_data_from_db()
     # devo controllare se la citta c'è già
@@ -72,6 +130,45 @@ def store_citta(citta: Citta) -> None:
     citta_dict[citta.nome()] = citta_info
     store_data_on_db(dati)
 
+
+def store_compagnia(compagnia: Compagnia) -> None:
+    dati = load_data_from_db()
+    # devo controllare se la compagnia c'è già
+    # se sì, la cancello
+    compagnie_dict = dati["Compagnia"]
+    if compagnia.nome() in compagnie_dict:
+        compagnie_dict.pop(compagnia.nome())
+
+    compagnia_info: dict[str, str] = compagnia.info()
+
+    compagnie_dict[compagnia.nome()] = compagnia_info
+    store_data_on_db(dati)
+
+
+def store_aeroporto(aeroporto: Aeroporto) -> None:
+    dati = load_data_from_db()
+    # devo controllare se l'aeroporto c'è già
+    # se sì, la cancello
+    aeroporti_dict = dati["Aeroporto"]
+    if aeroporto.nome() in aeroporti_dict:
+        aeroporti_dict.pop(aeroporto.codice())
+
+    aeroporto_info: dict[str, str] = aeroporto.info()
+
+    aeroporti_dict[aeroporto.codice()] = aeroporto_info
+    store_data_on_db(dati)
+
+
+def store_volo(volo: Volo) -> None:
+    dati = load_data_from_db()
+    voli_dict = dati["Volo"]
+    if volo.codice() in voli_dict:
+        voli_dict.pop(volo.codice())
+
+    volo_info: dict[str, str] = volo.info()
+    voli_dict[volo.codice()] = volo_info
+    store_data_on_db(dati)
+
 def nazioni_info(nazioni: dict[str, Nazione]) -> dict[str, dict[str, int | str]]:
     result: dict[str, dict[str, int | str]] = dict()
     for nazione in nazioni.values():
@@ -83,5 +180,23 @@ def all_citta_info(citta: dict[str, Citta]) -> dict[str, dict[str, int | str]]:
     result: dict[str, dict[str, int | str]] = dict()
     for c in citta.values():
         result[c.nome()] = c.info()
+    return result
+
+def compagnie_info(compagnie: dict[str, Compagnia]) -> dict[str, dict[str, int | str]]:
+    result: dict[str, dict[str, int | str]] = dict()
+    for c in compagnie.values():
+        result[c.nome()] = c.info()
+    return result
+
+def aeroporti_info(aeroporti: dict[str, Aeroporto]) -> dict[str, dict[str, CodiceIATA | str]]:
+    result: dict[str, dict[str, CodiceIATA | str]] = dict()
+    for a in aeroporti.values():
+        result[a.codice()] = a.info()
+    return result
+
+def voli_info(voli: dict[str, Volo]) -> dict[str, dict[str, int | str | CodiceVolo]]:
+    result: dict[str, dict[str, int| CodiceVolo | str]] = dict()
+    for v in voli.values():
+        result[v.codice()] = v.info()
     return result
 
